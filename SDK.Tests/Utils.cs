@@ -133,6 +133,17 @@ public class TestUtils
         var result6 = Utils.ConvertObjectToValue(protoStruct);
         Assert.Equal("value1", result6.StructValue.Fields["key1"].StringValue);
         Assert.Equal(123, result6.StructValue.Fields["key2"].NumberValue);
+        
+        // test Json
+        var json = new JsonObject
+        {
+            { "key1", "value1" },
+            { "key2", 123 },
+        };
+        var result7 = Utils.ConvertObjectToValue(json);
+        Console.WriteLine(result7);
+        Assert.Equal("value1", result7.StructValue.Fields["key1"].StringValue);
+        Assert.Equal(123, result7.StructValue.Fields["key2"].NumberValue);
     }
 
     [Fact]

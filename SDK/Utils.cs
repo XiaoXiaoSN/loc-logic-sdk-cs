@@ -20,6 +20,54 @@ public static class Utils
         return JsonSerializer.Deserialize<JsonNode>(jsonString);
     }
 
+    public static Value ConvertJsonToValue(JsonNode? jsonNode)
+    {
+        Value protoValue = new Value();
+
+        switch (jsonNode)
+        {
+            case JsonValue jsonValue when jsonValue.TryGetValue(out bool boolVal):
+                protoValue.BoolValue = boolVal;
+                break;
+
+            case JsonValue jsonValue when jsonValue.TryGetValue(out int numberVal):
+                protoValue.NumberValue = numberVal;
+                break;
+
+            case JsonValue jsonValue when jsonValue.TryGetValue(out double numberVal):
+                protoValue.NumberValue = numberVal;
+                break;
+
+            case JsonValue jsonValue when jsonValue.TryGetValue(out string? stringVal):
+                protoValue.StringValue = stringVal;
+                break;
+
+            case JsonObject jsonObject:
+                var structValue = new Struct();
+                foreach (var item in jsonObject)
+                {
+                    structValue.Fields[item.Key] = ConvertJsonToValue(item.Value);
+                }
+                protoValue.StructValue = structValue;
+                break;
+
+            case JsonArray jsonArray:
+                ListValue listValue = new ListValue();
+                foreach (var item in jsonArray)
+                {
+                    listValue.Values.Add(ConvertJsonToValue(item));
+                }
+                protoValue.ListValue = listValue;
+                break;
+
+            default:
+                protoValue.NullValue = NullValue.NullValue;
+                break;
+        }
+
+        return protoValue;
+    }
+
     public static Value ConvertObjectToValue(object? obj)
     {
         switch (obj)
@@ -47,6 +95,9 @@ public static class Utils
 
             case string s:
                 return Value.ForString(s);
+
+            case JsonNode json:
+                return ConvertJsonToValue(json);
 
             case IDictionary<string, object> dict:
                 var structValue = new Struct();
