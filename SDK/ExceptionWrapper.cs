@@ -74,7 +74,7 @@ public class ExceptionWrapper
 public class LogicError : Exception
 {
     public string Type { get; private set; }
-    public new string StackTrace { get; private set; }
+    public override string StackTrace { get; }
 
     public LogicError(ExceptionInfo ex)
         : base(ex.Message)
