@@ -24,6 +24,9 @@ public static class Utils
     {
         switch (obj)
         {
+            case Value value:
+                return value;
+
             case null:
                 return Value.ForNull();
 

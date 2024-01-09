@@ -119,6 +119,20 @@ public class TestUtils
         var result5 = Utils.ConvertObjectToValue(dict);
         Assert.Equal("value1", result5.StructValue.Fields["key1"].StringValue);
         Assert.Equal(123, result5.StructValue.Fields["key2"].NumberValue);
+
+        // test Value
+        var protoStruct = Value.ForStruct(new Struct
+        {
+            Fields =
+                    {
+                        { "key1", Value.ForString("value1") },
+                        { "key2", Value.ForNumber(123) },
+                        { "key3", Value.ForString("2019-08-01T00:00:00") },
+                    },
+        });
+        var result6 = Utils.ConvertObjectToValue(protoStruct);
+        Assert.Equal("value1", result6.StructValue.Fields["key1"].StringValue);
+        Assert.Equal(123, result6.StructValue.Fields["key2"].NumberValue);
     }
 
     [Fact]
@@ -175,7 +189,8 @@ public class TestUtils
     public void Test_ConvertUuidToGuid()
     {
         var expected1 = new Guid("78b9906e-8bf6-41cc-930c-539a4abfcec0");
-        var value1 = new Saffron.Common.Uuid {
+        var value1 = new Saffron.Common.Uuid
+        {
             HighBits = 8699142959711797708,
             LowBits = 10595935945440087744,
         };
